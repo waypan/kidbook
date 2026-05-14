@@ -1,0 +1,560 @@
+{
+  "pageId": "page_002_traffic_accident",
+  "sourceImage": "IMG_0265.jpeg",
+  "width": 2048,
+  "height": 1190,
+  "objects": [
+    {
+      "id": "ball_sidebar",
+      "nameZh": "球",
+      "textZh": "这是球。小朋友玩球时要远离马路。",
+      "audio": "audio/page_002/ball_sidebar.mp3",
+      "polygon": [
+        [
+          55,
+          160
+        ],
+        [
+          130,
+          160
+        ],
+        [
+          130,
+          235
+        ],
+        [
+          55,
+          235
+        ]
+      ]
+    },
+    {
+      "id": "stroller_sidebar",
+      "nameZh": "婴儿车",
+      "textZh": "这是婴儿车。婴儿坐在里面。",
+      "audio": "audio/page_002/stroller_sidebar.mp3",
+      "polygon": [
+        [
+          245,
+          150
+        ],
+        [
+          425,
+          150
+        ],
+        [
+          425,
+          280
+        ],
+        [
+          245,
+          280
+        ]
+      ]
+    },
+    {
+      "id": "ambulance_sidebar",
+      "nameZh": "救护车",
+      "textZh": "这是救护车。救护车来到了事故现场。",
+      "audio": "audio/page_002/ambulance_sidebar.mp3",
+      "polygon": [
+        [
+          55,
+          405
+        ],
+        [
+          330,
+          405
+        ],
+        [
+          330,
+          735
+        ],
+        [
+          55,
+          735
+        ]
+      ]
+    },
+    {
+      "id": "traffic_light_sidebar",
+      "nameZh": "交通信号灯",
+      "textZh": "这是交通信号灯。红灯停，绿灯行。",
+      "audio": "audio/page_002/traffic_light_sidebar.mp3",
+      "polygon": [
+        [
+          390,
+          330
+        ],
+        [
+          525,
+          330
+        ],
+        [
+          525,
+          735
+        ],
+        [
+          390,
+          735
+        ]
+      ]
+    },
+    {
+      "id": "skateboard_boy_sidebar",
+      "nameZh": "拿着滑板的男孩",
+      "textZh": "这是拿着滑板的男孩。过马路要注意看车。",
+      "audio": "audio/page_002/skateboard_boy_sidebar.mp3",
+      "polygon": [
+        [
+          45,
+          895
+        ],
+        [
+          165,
+          895
+        ],
+        [
+          165,
+          1060
+        ],
+        [
+          45,
+          1060
+        ]
+      ]
+    },
+    {
+      "id": "policewoman_sidebar",
+      "nameZh": "女警察",
+      "textZh": "这是女警察。她正在拍照记录事故现场。",
+      "audio": "audio/page_002/policewoman_sidebar.mp3",
+      "polygon": [
+        [
+          290,
+          885
+        ],
+        [
+          430,
+          885
+        ],
+        [
+          430,
+          1065
+        ],
+        [
+          290,
+          1065
+        ]
+      ]
+    },
+    {
+      "id": "bike_shop",
+      "nameZh": "自行车和零配件店",
+      "textZh": "这是自行车和零配件店。店里有很多自行车。",
+      "audio": "audio/page_002/bike_shop.mp3",
+      "polygon": [
+        [
+          585,
+          210
+        ],
+        [
+          1115,
+          210
+        ],
+        [
+          1115,
+          445
+        ],
+        [
+          585,
+          445
+        ]
+      ]
+    },
+    {
+      "id": "blue_van",
+      "nameZh": "蓝色面包车",
+      "textZh": "这是蓝色面包车。它正在路上行驶。",
+      "audio": "audio/page_002/blue_van.mp3",
+      "polygon": [
+        [
+          1235,
+          75
+        ],
+        [
+          1595,
+          75
+        ],
+        [
+          1595,
+          330
+        ],
+        [
+          1235,
+          330
+        ]
+      ]
+    },
+    {
+      "id": "fire_truck",
+      "nameZh": "消防车",
+      "textZh": "这是消防车。消防车也来到了现场。",
+      "audio": "audio/page_002/fire_truck.mp3",
+      "polygon": [
+        [
+          1160,
+          390
+        ],
+        [
+          1615,
+          390
+        ],
+        [
+          1615,
+          670
+        ],
+        [
+          1160,
+          670
+        ]
+      ]
+    },
+    {
+      "id": "ambulance_main",
+      "nameZh": "救护车",
+      "textZh": "这是救护车。救护人员正在帮助大家。",
+      "audio": "audio/page_002/ambulance_main.mp3",
+      "polygon": [
+        [
+          1760,
+          395
+        ],
+        [
+          2048,
+          395
+        ],
+        [
+          2048,
+          700
+        ],
+        [
+          1760,
+          700
+        ]
+      ]
+    },
+    {
+      "id": "green_car",
+      "nameZh": "绿色汽车",
+      "textZh": "这是绿色汽车。它停在路口附近。",
+      "audio": "audio/page_002/green_car.mp3",
+      "polygon": [
+        [
+          1225,
+          615
+        ],
+        [
+          1485,
+          615
+        ],
+        [
+          1485,
+          835
+        ],
+        [
+          1225,
+          835
+        ]
+      ]
+    },
+    {
+      "id": "yellow_car",
+      "nameZh": "黄色汽车",
+      "textZh": "这是黄色汽车。它在事故现场旁边。",
+      "audio": "audio/page_002/yellow_car.mp3",
+      "polygon": [
+        [
+          1475,
+          605
+        ],
+        [
+          1735,
+          605
+        ],
+        [
+          1735,
+          785
+        ],
+        [
+          1475,
+          785
+        ]
+      ]
+    },
+    {
+      "id": "police_car",
+      "nameZh": "警车",
+      "textZh": "这是警车。警察正在处理交通事故。",
+      "audio": "audio/page_002/police_car.mp3",
+      "polygon": [
+        [
+          790,
+          750
+        ],
+        [
+          1115,
+          750
+        ],
+        [
+          1115,
+          950
+        ],
+        [
+          790,
+          950
+        ]
+      ]
+    },
+    {
+      "id": "motorcycle",
+      "nameZh": "摩托车",
+      "textZh": "这是摩托车。骑车时要戴好头盔。",
+      "audio": "audio/page_002/motorcycle.mp3",
+      "polygon": [
+        [
+          595,
+          630
+        ],
+        [
+          845,
+          630
+        ],
+        [
+          845,
+          830
+        ],
+        [
+          595,
+          830
+        ]
+      ]
+    },
+    {
+      "id": "pink_scooter",
+      "nameZh": "轻便摩托车",
+      "textZh": "这是轻便摩托车。它停在路口附近。",
+      "audio": "audio/page_002/pink_scooter.mp3",
+      "polygon": [
+        [
+          910,
+          635
+        ],
+        [
+          1085,
+          635
+        ],
+        [
+          1085,
+          795
+        ],
+        [
+          910,
+          795
+        ]
+      ]
+    },
+    {
+      "id": "traffic_light_main",
+      "nameZh": "交通信号灯",
+      "textZh": "这是交通信号灯。大家要按照信号灯通行。",
+      "audio": "audio/page_002/traffic_light_main.mp3",
+      "polygon": [
+        [
+          1010,
+          120
+        ],
+        [
+          1145,
+          120
+        ],
+        [
+          1145,
+          665
+        ],
+        [
+          1010,
+          665
+        ]
+      ]
+    },
+    {
+      "id": "ball_main",
+      "nameZh": "球",
+      "textZh": "这是球。球滚到了马路边，很危险。",
+      "audio": "audio/page_002/ball_main.mp3",
+      "polygon": [
+        [
+          1705,
+          625
+        ],
+        [
+          1770,
+          625
+        ],
+        [
+          1770,
+          690
+        ],
+        [
+          1705,
+          690
+        ]
+      ]
+    },
+    {
+      "id": "stroller_main",
+      "nameZh": "婴儿车",
+      "textZh": "这是婴儿车。大人正推着孩子过路口。",
+      "audio": "audio/page_002/stroller_main.mp3",
+      "polygon": [
+        [
+          1765,
+          915
+        ],
+        [
+          1940,
+          915
+        ],
+        [
+          1940,
+          1070
+        ],
+        [
+          1765,
+          1070
+        ]
+      ]
+    },
+    {
+      "id": "dog",
+      "nameZh": "小狗",
+      "textZh": "这是小狗。小狗在路边。",
+      "audio": "audio/page_002/dog.mp3",
+      "polygon": [
+        [
+          1280,
+          1000
+        ],
+        [
+          1365,
+          1000
+        ],
+        [
+          1365,
+          1085
+        ],
+        [
+          1280,
+          1085
+        ]
+      ]
+    },
+    {
+      "id": "warning_triangle",
+      "nameZh": "三角形警告标志",
+      "textZh": "这是三角形警告标志。它提醒车辆注意事故。",
+      "audio": "audio/page_002/warning_triangle.mp3",
+      "polygon": [
+        [
+          590,
+          800
+        ],
+        [
+          700,
+          800
+        ],
+        [
+          700,
+          925
+        ],
+        [
+          590,
+          925
+        ]
+      ]
+    },
+    {
+      "id": "traffic_cones",
+      "nameZh": "交通锥",
+      "textZh": "这是交通锥。它们把危险区域围起来。",
+      "audio": "audio/page_002/traffic_cones.mp3",
+      "polygon": [
+        [
+          620,
+          880
+        ],
+        [
+          775,
+          880
+        ],
+        [
+          775,
+          1040
+        ],
+        [
+          620,
+          1040
+        ]
+      ]
+    },
+    {
+      "id": "police_officers",
+      "nameZh": "警察",
+      "textZh": "警察正在询问司机，了解事故情况。",
+      "audio": "audio/page_002/police_officers.mp3",
+      "polygon": [
+        [
+          1370,
+          820
+        ],
+        [
+          1625,
+          820
+        ],
+        [
+          1625,
+          985
+        ],
+        [
+          1370,
+          985
+        ]
+      ]
+    },
+    {
+      "id": "bicycle_lane",
+      "nameZh": "自行车道",
+      "textZh": "这是自行车道。自行车应该在这里行驶。",
+      "audio": "audio/page_002/bicycle_lane.mp3",
+      "polygon": [
+        [
+          820,
+          980
+        ],
+        [
+          1190,
+          980
+        ],
+        [
+          1190,
+          1145
+        ],
+        [
+          820,
+          1145
+        ]
+      ]
+    }
+  ]
+}

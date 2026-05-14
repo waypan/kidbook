@@ -1,0 +1,19 @@
+{
+  "pageId": "page_002",
+  "width": 1200,
+  "height": 1600,
+  "objects": [
+    {
+      "id": "cat",
+      "nameZh": "小猫",
+      "textZh": "这是小猫，喵喵叫的小猫。",
+      "audio": "audio/cat_zh.mp3",
+      "polygon": [
+        [200, 800],
+        [400, 750],
+        [450, 950],
+        [250, 1000]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,536 @@
+{
+  "pageId": "page_003_tow_truck",
+  "sourceImage": "IMG_0266.jpeg",
+  "width": 2048,
+  "height": 1162,
+  "objects": [
+    {
+      "id": "bird_sidebar",
+      "nameZh": "小鸟",
+      "textZh": "这是小鸟。小鸟停在路边。",
+      "audio": "audio/page_003/bird_sidebar.mp3",
+      "polygon": [
+        [
+          245,
+          235
+        ],
+        [
+          310,
+          235
+        ],
+        [
+          310,
+          295
+        ],
+        [
+          245,
+          295
+        ]
+      ]
+    },
+    {
+      "id": "lightbar_sidebar",
+      "nameZh": "警示灯条",
+      "textZh": "这是警示灯条。它会闪灯提醒大家注意。",
+      "audio": "audio/page_003/lightbar_sidebar.mp3",
+      "polygon": [
+        [
+          410,
+          230
+        ],
+        [
+          545,
+          230
+        ],
+        [
+          545,
+          315
+        ],
+        [
+          410,
+          315
+        ]
+      ]
+    },
+    {
+      "id": "mother_with_stroller_sidebar",
+      "nameZh": "推着婴儿车的妈妈",
+      "textZh": "这是推着婴儿车的妈妈。她正在路边等待。",
+      "audio": "audio/page_003/mother_with_stroller_sidebar.mp3",
+      "polygon": [
+        [
+          50,
+          365
+        ],
+        [
+          245,
+          365
+        ],
+        [
+          245,
+          575
+        ],
+        [
+          50,
+          575
+        ]
+      ]
+    },
+    {
+      "id": "scooter_boy_sidebar",
+      "nameZh": "滑板车",
+      "textZh": "这是滑板车。小朋友正在骑滑板车。",
+      "audio": "audio/page_003/scooter_boy_sidebar.mp3",
+      "polygon": [
+        [
+          350,
+          405
+        ],
+        [
+          515,
+          405
+        ],
+        [
+          515,
+          575
+        ],
+        [
+          350,
+          575
+        ]
+      ]
+    },
+    {
+      "id": "bus_stop_sign_sidebar",
+      "nameZh": "公交车站牌",
+      "textZh": "这是公交车站牌。大家在这里等公交车。",
+      "audio": "audio/page_003/bus_stop_sign_sidebar.mp3",
+      "polygon": [
+        [
+          70,
+          715
+        ],
+        [
+          175,
+          715
+        ],
+        [
+          175,
+          1000
+        ],
+        [
+          70,
+          1000
+        ]
+      ]
+    },
+    {
+      "id": "traffic_cone_sidebar",
+      "nameZh": "交通锥",
+      "textZh": "这是交通锥。它提醒大家注意前方。",
+      "audio": "audio/page_003/traffic_cone_sidebar.mp3",
+      "polygon": [
+        [
+          255,
+          705
+        ],
+        [
+          355,
+          705
+        ],
+        [
+          355,
+          835
+        ],
+        [
+          255,
+          835
+        ]
+      ]
+    },
+    {
+      "id": "cat_sidebar",
+      "nameZh": "小猫",
+      "textZh": "这是小猫。小猫在路边走。",
+      "audio": "audio/page_003/cat_sidebar.mp3",
+      "polygon": [
+        [
+          395,
+          700
+        ],
+        [
+          515,
+          700
+        ],
+        [
+          515,
+          800
+        ],
+        [
+          395,
+          800
+        ]
+      ]
+    },
+    {
+      "id": "scooter_sidebar",
+      "nameZh": "轻便摩托车",
+      "textZh": "这是轻便摩托车。骑车时要戴头盔。",
+      "audio": "audio/page_003/scooter_sidebar.mp3",
+      "polygon": [
+        [
+          240,
+          940
+        ],
+        [
+          445,
+          940
+        ],
+        [
+          445,
+          1105
+        ],
+        [
+          240,
+          1105
+        ]
+      ]
+    },
+    {
+      "id": "orange_tow_truck",
+      "nameZh": "拖车",
+      "textZh": "这是拖车。拖车准备把坏掉的汽车拖走。",
+      "audio": "audio/page_003/orange_tow_truck.mp3",
+      "polygon": [
+        [
+          640,
+          100
+        ],
+        [
+          1180,
+          100
+        ],
+        [
+          1180,
+          480
+        ],
+        [
+          640,
+          480
+        ]
+      ]
+    },
+    {
+      "id": "damaged_blue_car",
+      "nameZh": "受损汽车",
+      "textZh": "这是受损汽车。它的车头坏了，不能继续开。",
+      "audio": "audio/page_003/damaged_blue_car.mp3",
+      "polygon": [
+        [
+          635,
+          440
+        ],
+        [
+          1100,
+          440
+        ],
+        [
+          1100,
+          730
+        ],
+        [
+          635,
+          730
+        ]
+      ]
+    },
+    {
+      "id": "yellow_tow_truck",
+      "nameZh": "黄色拖车",
+      "textZh": "这是黄色拖车。它正在帮助受损汽车。",
+      "audio": "audio/page_003/yellow_tow_truck.mp3",
+      "polygon": [
+        [
+          1080,
+          640
+        ],
+        [
+          1955,
+          640
+        ],
+        [
+          1955,
+          1115
+        ],
+        [
+          1080,
+          1115
+        ]
+      ]
+    },
+    {
+      "id": "tow_ramp",
+      "nameZh": "拖车斜板",
+      "textZh": "这是拖车斜板。汽车可以沿着斜板上到拖车。",
+      "audio": "audio/page_003/tow_ramp.mp3",
+      "polygon": [
+        [
+          915,
+          590
+        ],
+        [
+          1385,
+          590
+        ],
+        [
+          1385,
+          790
+        ],
+        [
+          915,
+          790
+        ]
+      ]
+    },
+    {
+      "id": "scooter_main",
+      "nameZh": "轻便摩托车",
+      "textZh": "这是轻便摩托车。它正在经过事故现场。",
+      "audio": "audio/page_003/scooter_main.mp3",
+      "polygon": [
+        [
+          1460,
+          395
+        ],
+        [
+          1690,
+          395
+        ],
+        [
+          1690,
+          625
+        ],
+        [
+          1460,
+          625
+        ]
+      ]
+    },
+    {
+      "id": "bus_stop",
+      "nameZh": "公交车站",
+      "textZh": "这是公交车站。乘客正在这里等车。",
+      "audio": "audio/page_003/bus_stop.mp3",
+      "polygon": [
+        [
+          1670,
+          65
+        ],
+        [
+          2048,
+          65
+        ],
+        [
+          2048,
+          430
+        ],
+        [
+          1670,
+          430
+        ]
+      ]
+    },
+    {
+      "id": "family_with_wagon",
+      "nameZh": "推车里的孩子",
+      "textZh": "孩子们坐在红色小推车里。",
+      "audio": "audio/page_003/family_with_wagon.mp3",
+      "polygon": [
+        [
+          1690,
+          245
+        ],
+        [
+          1900,
+          245
+        ],
+        [
+          1900,
+          420
+        ],
+        [
+          1690,
+          420
+        ]
+      ]
+    },
+    {
+      "id": "child_on_scooter",
+      "nameZh": "骑滑板车的男孩",
+      "textZh": "这是骑滑板车的男孩。他在路边玩滑板车。",
+      "audio": "audio/page_003/child_on_scooter.mp3",
+      "polygon": [
+        [
+          1030,
+          900
+        ],
+        [
+          1210,
+          900
+        ],
+        [
+          1210,
+          1115
+        ],
+        [
+          1030,
+          1115
+        ]
+      ]
+    },
+    {
+      "id": "photographer",
+      "nameZh": "拍照的人",
+      "textZh": "这个人正在拍照，记录拖车救援。",
+      "audio": "audio/page_003/photographer.mp3",
+      "polygon": [
+        [
+          685,
+          750
+        ],
+        [
+          830,
+          750
+        ],
+        [
+          830,
+          925
+        ],
+        [
+          685,
+          925
+        ]
+      ]
+    },
+    {
+      "id": "mother_with_stroller_main",
+      "nameZh": "推婴儿车的妈妈",
+      "textZh": "妈妈推着婴儿车，站在安全的地方。",
+      "audio": "audio/page_003/mother_with_stroller_main.mp3",
+      "polygon": [
+        [
+          575,
+          850
+        ],
+        [
+          805,
+          850
+        ],
+        [
+          805,
+          1080
+        ],
+        [
+          575,
+          1080
+        ]
+      ]
+    },
+    {
+      "id": "traffic_cones_main",
+      "nameZh": "交通锥",
+      "textZh": "这是交通锥。它们提醒车辆小心通过。",
+      "audio": "audio/page_003/traffic_cones_main.mp3",
+      "polygon": [
+        [
+          560,
+          310
+        ],
+        [
+          640,
+          310
+        ],
+        [
+          640,
+          430
+        ],
+        [
+          560,
+          430
+        ]
+      ]
+    },
+    {
+      "id": "cat_main",
+      "nameZh": "小猫",
+      "textZh": "这是小猫。小猫在路边看着大家。",
+      "audio": "audio/page_003/cat_main.mp3",
+      "polygon": [
+        [
+          610,
+          0
+        ],
+        [
+          700,
+          0
+        ],
+        [
+          700,
+          110
+        ],
+        [
+          610,
+          110
+        ]
+      ]
+    },
+    {
+      "id": "bird_main",
+      "nameZh": "小鸟",
+      "textZh": "这是小鸟。小鸟飞到了车站附近。",
+      "audio": "audio/page_003/bird_main.mp3",
+      "polygon": [
+        [
+          1580,
+          20
+        ],
+        [
+          1655,
+          20
+        ],
+        [
+          1655,
+          80
+        ],
+        [
+          1580,
+          80
+        ]
+      ]
+    },
+    {
+      "id": "tow_truck_driver",
+      "nameZh": "拖车司机",
+      "textZh": "这是拖车司机。司机正在操作拖车。",
+      "audio": "audio/page_003/tow_truck_driver.mp3",
+      "polygon": [
+        [
+          1410,
+          805
+        ],
+        [
+          1570,
+          805
+        ],
+        [
+          1570,
+          1030
+        ],
+        [
+          1410,
+          1030
+        ]
+      ]
+    }
+  ]
+}

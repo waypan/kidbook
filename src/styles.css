@@ -1,0 +1,149 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #000;
+  color: white;
+}
+
+.app {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.camera-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.camera-preview {
+  position: relative;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+
+.camera-start-panel {
+  position: absolute;
+  left: 50%;
+  bottom: 32px;
+  z-index: 20;
+  width: min(320px, calc(100vw - 32px));
+  transform: translateX(-50%);
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  text-align: center;
+}
+
+.camera-start-panel p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.camera-start-panel button {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 8px;
+  background: #0ea5e9;
+  color: #fff;
+  padding: 10px 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.camera-start-panel button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.point-highlight {
+  position: absolute;
+  z-index: 15;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 3px solid #00ffd6;
+  background: rgba(0, 255, 214, 0.25);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  display: none;
+  mix-blend-mode: screen;
+}
+
+.page-controls {
+  position: absolute;
+  z-index: 10;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-size: 0.95rem;
+}
+
+.page-controls button {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.page-controls button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.object-text {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.debug-overlay {
+  position: absolute;
+  z-index: 10;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  max-width: 200px;
+}
+
+.debug-overlay p {
+  margin: 2px 0;
+}

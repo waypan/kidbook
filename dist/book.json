@@ -1,0 +1,33 @@
+{
+  "bookId": "rescue_scene_demo_001",
+  "title": "儿童救援场景点读 Demo",
+  "defaultLanguage": "zh",
+  "coordinateSystem": "image_pixel",
+  "note": "Polygons are approximate rectangles based on the uploaded full-page photos. Please fine-tune in the debug overlay after testing on device.",
+  "pages": [
+    {
+      "pageId": "page_001_fire",
+      "title": "着火的房子",
+      "image": "pages/IMG_0264.jpeg",
+      "data": "book-data/page_001_fire.json",
+      "width": 2048,
+      "height": 1195
+    },
+    {
+      "pageId": "page_002_traffic_accident",
+      "title": "交通事故",
+      "image": "pages/IMG_0265.jpeg",
+      "data": "book-data/page_002_traffic_accident.json",
+      "width": 2048,
+      "height": 1190
+    },
+    {
+      "pageId": "page_003_tow_truck",
+      "title": "拖车救援",
+      "image": "pages/IMG_0266.jpeg",
+      "data": "book-data/page_003_tow_truck.json",
+      "width": 2048,
+      "height": 1162
+    }
+  ]
+}

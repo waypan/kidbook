@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Children Book Reader</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero">
+        <h1 id="book-title">Children Book Reader</h1>
+        <p id="book-subtitle">A simple story player with pages, audio, and navigation.</p>
+      </section>
+
+      <section class="reader-card">
+        <div class="page-frame">
+          <img id="page-image" src="./pages/page_001.jpg" alt="Book page" />
+        </div>
+
+        <div class="page-content">
+          <div class="page-info">
+            <span id="page-label">Page 1</span>
+            <span id="page-author"></span>
+          </div>
+          <p id="page-text"></p>
+        </div>
+
+        <div class="controls">
+          <button id="prev-btn" type="button">Previous</button>
+          <button id="play-btn" type="button">Play Audio</button>
+          <button id="next-btn" type="button">Next</button>
+        </div>
+      </section>
+    </main>
+
+    <audio id="page-audio" preload="auto"></audio>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
