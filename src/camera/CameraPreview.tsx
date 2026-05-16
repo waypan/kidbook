@@ -6,7 +6,7 @@ import { findHitObject } from '../book/hitTest';
 import { playAudio, shouldPlay } from '../audio/audioPlayer';
 import { BookPage, BookObject, Book } from '../book/types';
 import DebugOverlay from '../debug/DebugOverlay';
-import { detectColorPageMarkers } from '../calibration/colorMarkerDetector';
+import { detectAprilTagPageMarkers } from '../calibration/aprilTagDetector';
 import { computeHomography, transformPoint } from '../calibration/homography';
 import { cornersAsArray, pageCornersForPage } from '../calibration/calibrationStore';
 import type { Point } from '../calibration/calibrationTypes';
@@ -30,6 +30,7 @@ const CameraPreview: React.FC<CameraPreviewProps> = ({
   const pointerRef = useRef<HTMLDivElement>(null);
   const markerCanvasRef = useRef<HTMLCanvasElement>(null);
   const pageHomographyRef = useRef<number[] | null>(null);
+  const markerScanInFlightRef = useRef(false);
   const frameCountRef = useRef(0);
   const [currentPage, setCurrentPage] = useState<BookPage | null>(null);
   const [book, setBook] = useState<Book | null>(null);
@@ -39,6 +40,7 @@ const CameraPreview: React.FC<CameraPreviewProps> = ({
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [pagePoint, setPagePoint] = useState<[number, number] | null>(null);
   const [pageTrackingReady, setPageTrackingReady] = useState(false);
+  const [pageTrackingError, setPageTrackingError] = useState<string | null>(null);
 
   useEffect(() => {
     const init = async () => {
@@ -80,17 +82,28 @@ const CameraPreview: React.FC<CameraPreviewProps> = ({
       if (video.readyState === video.HAVE_ENOUGH_DATA) {
         frameCountRef.current += 1;
 
-        if (markerCanvasRef.current && frameCountRef.current % 6 === 0) {
-          const cameraCorners = detectColorPageMarkers(video, markerCanvasRef.current);
-
-          if (cameraCorners) {
-            const pageCorners = pageCornersForPage(currentPage.width, currentPage.height);
-            pageHomographyRef.current = computeHomography(cornersAsArray(cameraCorners), cornersAsArray(pageCorners));
-            setPageTrackingReady(true);
-          } else {
-            pageHomographyRef.current = null;
-            setPageTrackingReady(false);
-          }
+        if (markerCanvasRef.current && frameCountRef.current % 6 === 0 && !markerScanInFlightRef.current) {
+          markerScanInFlightRef.current = true;
+          detectAprilTagPageMarkers(video, markerCanvasRef.current)
+            .then((cameraCorners) => {
+              if (cameraCorners) {
+                const pageCorners = pageCornersForPage(currentPage.width, currentPage.height);
+                pageHomographyRef.current = computeHomography(cornersAsArray(cameraCorners), cornersAsArray(pageCorners));
+                setPageTrackingReady(true);
+                setPageTrackingError(null);
+              } else {
+                pageHomographyRef.current = null;
+                setPageTrackingReady(false);
+              }
+            })
+            .catch((markerError) => {
+              pageHomographyRef.current = null;
+              setPageTrackingReady(false);
+              setPageTrackingError(markerError instanceof Error ? markerError.message : 'AprilTag detection failed');
+            })
+            .finally(() => {
+              markerScanInFlightRef.current = false;
+            });
         }
 
         const handResult = handAvailable ? detectHands(video) : null;
@@ -168,7 +181,7 @@ const CameraPreview: React.FC<CameraPreviewProps> = ({
         isDetecting={handAvailable}
       />
       <div className={`page-tracking-status ${pageTrackingReady ? 'is-ready' : ''}`}>
-        {pageTrackingReady ? 'Page labels found' : 'Looking for page labels'}
+        {pageTrackingError ?? (pageTrackingReady ? 'AprilTags found' : 'Looking for AprilTags 0-3')}
       </div>
       <video ref={videoRef} autoPlay playsInline muted className="camera-preview" />
       <canvas ref={markerCanvasRef} className="marker-scan-canvas" aria-hidden="true" />
