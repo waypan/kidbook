@@ -6,6 +6,10 @@ import { findHitObject } from '../book/hitTest';
 import { playAudio, shouldPlay } from '../audio/audioPlayer';
 import { BookPage, BookObject, Book } from '../book/types';
 import DebugOverlay from '../debug/DebugOverlay';
+import { detectColorPageMarkers } from '../calibration/colorMarkerDetector';
+import { computeHomography, transformPoint } from '../calibration/homography';
+import { cornersAsArray, pageCornersForPage } from '../calibration/calibrationStore';
+import type { Point } from '../calibration/calibrationTypes';
 
 interface CameraPreviewProps {
   onPageLoad: (page: BookPage | null) => void;
@@ -24,6 +28,9 @@ const CameraPreview: React.FC<CameraPreviewProps> = ({
 }) => {
   const { videoRef, error, status, startCamera } = useCamera();
   const pointerRef = useRef<HTMLDivElement>(null);
+  const markerCanvasRef = useRef<HTMLCanvasElement>(null);
+  const pageHomographyRef = useRef<number[] | null>(null);
+  const frameCountRef = useRef(0);
   const [currentPage, setCurrentPage] = useState<BookPage | null>(null);
   const [book, setBook] = useState<Book | null>(null);
   const [lastHitObject, setLastHitObject] = useState<BookObject | null>(null);
@@ -31,6 +38,7 @@ const CameraPreview: React.FC<CameraPreviewProps> = ({
   const [handError, setHandError] = useState<string | null>(null);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [pagePoint, setPagePoint] = useState<[number, number] | null>(null);
+  const [pageTrackingReady, setPageTrackingReady] = useState(false);
 
   useEffect(() => {
     const init = async () => {
@@ -55,6 +63,8 @@ const CameraPreview: React.FC<CameraPreviewProps> = ({
     setCurrentPageIndex(index);
     setPagePoint(null);
     setLastHitObject(null);
+    pageHomographyRef.current = null;
+    setPageTrackingReady(false);
     onPageLoad(pageData);
     onHitObject(null);
     onPagePoint(null);
@@ -68,7 +78,20 @@ const CameraPreview: React.FC<CameraPreviewProps> = ({
 
     const detect = () => {
       if (video.readyState === video.HAVE_ENOUGH_DATA) {
-        // use video dimensions for mapping, no canvas rendering required
+        frameCountRef.current += 1;
+
+        if (markerCanvasRef.current && frameCountRef.current % 6 === 0) {
+          const cameraCorners = detectColorPageMarkers(video, markerCanvasRef.current);
+
+          if (cameraCorners) {
+            const pageCorners = pageCornersForPage(currentPage.width, currentPage.height);
+            pageHomographyRef.current = computeHomography(cornersAsArray(cameraCorners), cornersAsArray(pageCorners));
+            setPageTrackingReady(true);
+          } else {
+            pageHomographyRef.current = null;
+            setPageTrackingReady(false);
+          }
+        }
 
         const handResult = handAvailable ? detectHands(video) : null;
         onDetecting(handAvailable && !!handResult);
@@ -89,14 +112,18 @@ const CameraPreview: React.FC<CameraPreviewProps> = ({
           }
 
           if (fingerPoint) {
-            const mappedPagePoint: [number, number] = [
-              (1 - fingerPoint[0]) * currentPage.width,
-              fingerPoint[1] * currentPage.height
+            const cameraPoint: Point = [
+              (1 - fingerPoint[0]) * video.videoWidth,
+              fingerPoint[1] * video.videoHeight
             ];
+            const mappedPagePoint = pageHomographyRef.current
+              ? transformPoint(cameraPoint, pageHomographyRef.current)
+              : null;
+
             setPagePoint(mappedPagePoint);
             onPagePoint(mappedPagePoint);
 
-            const hitObject = findHitObject(currentPage, mappedPagePoint);
+            const hitObject = mappedPagePoint ? findHitObject(currentPage, mappedPagePoint) : null;
             onHitObject(hitObject);
 
             if (hitObject && hitObject !== lastHitObject && shouldPlay(hitObject.id)) {
@@ -140,7 +167,11 @@ const CameraPreview: React.FC<CameraPreviewProps> = ({
         pagePoint={pagePoint}
         isDetecting={handAvailable}
       />
+      <div className={`page-tracking-status ${pageTrackingReady ? 'is-ready' : ''}`}>
+        {pageTrackingReady ? 'Page labels found' : 'Looking for page labels'}
+      </div>
       <video ref={videoRef} autoPlay playsInline muted className="camera-preview" />
+      <canvas ref={markerCanvasRef} className="marker-scan-canvas" aria-hidden="true" />
       {status !== 'active' && (
         <div className="camera-start-panel">
           {error && <p>{error}</p>}
