@@ -7,6 +7,7 @@ import { playAudio, shouldPlay } from '../audio/audioPlayer';
 import { BookPage, BookObject, Book } from '../book/types';
 import DebugOverlay from '../debug/DebugOverlay';
 import { detectAprilTagPageMarkers } from '../calibration/aprilTagDetector';
+import type { AprilTagDetection } from '../calibration/aprilTagDetector';
 import { computeHomography, transformPoint } from '../calibration/homography';
 import { cornersAsArray, pageCornersForPage } from '../calibration/calibrationStore';
 import type { Point } from '../calibration/calibrationTypes';
@@ -17,6 +18,12 @@ interface CameraPreviewProps {
   onFingerPoint: (point: [number, number] | null) => void;
   onPagePoint: (point: [number, number] | null) => void;
   onDetecting: (detecting: boolean) => void;
+}
+
+interface TagOverlayShape {
+  id: number;
+  center: Point;
+  corners: Point[];
 }
 
 const CameraPreview: React.FC<CameraPreviewProps> = ({
@@ -41,6 +48,9 @@ const CameraPreview: React.FC<CameraPreviewProps> = ({
   const [pagePoint, setPagePoint] = useState<[number, number] | null>(null);
   const [pageTrackingReady, setPageTrackingReady] = useState(false);
   const [pageTrackingError, setPageTrackingError] = useState<string | null>(null);
+  const [detectedTagIds, setDetectedTagIds] = useState<number[]>([]);
+  const [tagOverlayShapes, setTagOverlayShapes] = useState<TagOverlayShape[]>([]);
+  const [tagOverlaySize, setTagOverlaySize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     const init = async () => {
@@ -67,6 +77,9 @@ const CameraPreview: React.FC<CameraPreviewProps> = ({
     setLastHitObject(null);
     pageHomographyRef.current = null;
     setPageTrackingReady(false);
+    setDetectedTagIds([]);
+    setTagOverlayShapes([]);
+    setTagOverlaySize({ width: 0, height: 0 });
     onPageLoad(pageData);
     onHitObject(null);
     onPagePoint(null);
@@ -85,7 +98,11 @@ const CameraPreview: React.FC<CameraPreviewProps> = ({
         if (markerCanvasRef.current && frameCountRef.current % 6 === 0 && !markerScanInFlightRef.current) {
           markerScanInFlightRef.current = true;
           detectAprilTagPageMarkers(video, markerCanvasRef.current)
-            .then((cameraCorners) => {
+            .then(({ pageCorners: cameraCorners, detections }) => {
+              const overlay = buildTagOverlay(video, detections);
+              setTagOverlayShapes(overlay.shapes);
+              setTagOverlaySize(overlay.size);
+              setDetectedTagIds([...new Set(detections.map((detection) => detection.id))].sort((a, b) => a - b));
               if (cameraCorners) {
                 const pageCorners = pageCornersForPage(currentPage.width, currentPage.height);
                 pageHomographyRef.current = computeHomography(cornersAsArray(cameraCorners), cornersAsArray(pageCorners));
@@ -97,6 +114,9 @@ const CameraPreview: React.FC<CameraPreviewProps> = ({
               }
             })
             .catch((markerError) => {
+              setTagOverlayShapes([]);
+              setTagOverlaySize({ width: 0, height: 0 });
+              setDetectedTagIds([]);
               pageHomographyRef.current = null;
               setPageTrackingReady(false);
               setPageTrackingError(markerError instanceof Error ? markerError.message : 'AprilTag detection failed');
@@ -181,9 +201,29 @@ const CameraPreview: React.FC<CameraPreviewProps> = ({
         isDetecting={handAvailable}
       />
       <div className={`page-tracking-status ${pageTrackingReady ? 'is-ready' : ''}`}>
-        {pageTrackingError ?? (pageTrackingReady ? 'AprilTags found' : 'Looking for AprilTags 0-3')}
+        {pageTrackingError ?? getPageTrackingStatus(pageTrackingReady, detectedTagIds)}
       </div>
       <video ref={videoRef} autoPlay playsInline muted className="camera-preview" />
+      <svg
+        className="apriltag-overlay"
+        viewBox={`0 0 ${Math.max(tagOverlaySize.width, 1)} ${Math.max(tagOverlaySize.height, 1)}`}
+        aria-hidden="true"
+      >
+        {tagOverlayShapes.map((shape) => (
+          <g key={shape.id}>
+            {shape.corners.length > 1 && (
+              <polygon
+                points={shape.corners.map(([x, y]) => `${x},${y}`).join(' ')}
+                className="apriltag-mask"
+              />
+            )}
+            <circle cx={shape.center[0]} cy={shape.center[1]} r="12" className="apriltag-center" />
+            <text x={shape.center[0] + 18} y={shape.center[1]} className="apriltag-label">
+              ID {shape.id}
+            </text>
+          </g>
+        ))}
+      </svg>
       <canvas ref={markerCanvasRef} className="marker-scan-canvas" aria-hidden="true" />
       {status !== 'active' && (
         <div className="camera-start-panel">
@@ -198,5 +238,51 @@ const CameraPreview: React.FC<CameraPreviewProps> = ({
     </div>
   );
 };
+
+function getPageTrackingStatus(pageTrackingReady: boolean, detectedTagIds: number[]) {
+  if (pageTrackingReady) return 'AprilTags found';
+  if (detectedTagIds.length > 0) return `Detected AprilTags: ${detectedTagIds.join(', ')}`;
+  return 'Looking for AprilTags 0-3';
+}
+
+function buildTagOverlay(video: HTMLVideoElement, detections: AprilTagDetection[]) {
+  if (!video.videoWidth || !video.videoHeight) {
+    return { shapes: [], size: { width: 0, height: 0 } };
+  }
+
+  const rect = video.getBoundingClientRect();
+  const width = Math.round(rect.width);
+  const height = Math.round(rect.height);
+  if (width <= 0 || height <= 0) {
+    return { shapes: [], size: { width: 0, height: 0 } };
+  }
+
+  const shapes = detections.map((detection) => ({
+    id: detection.id,
+    center: videoPointToOverlayPoint(detection.center, video, width, height),
+    corners: detection.corners.map((point) => videoPointToOverlayPoint(point, video, width, height))
+  }));
+
+  return { shapes, size: { width, height } };
+}
+
+function videoPointToOverlayPoint(
+  point: Point,
+  video: HTMLVideoElement,
+  displayWidth: number,
+  displayHeight: number
+): Point {
+  const [x, y] = point;
+  const scale = Math.max(displayWidth / video.videoWidth, displayHeight / video.videoHeight);
+  const renderedWidth = video.videoWidth * scale;
+  const renderedHeight = video.videoHeight * scale;
+  const offsetX = (displayWidth - renderedWidth) / 2;
+  const offsetY = (displayHeight - renderedHeight) / 2;
+
+  return [
+    offsetX + renderedWidth - x * scale,
+    offsetY + y * scale
+  ];
+}
 
 export default CameraPreview;

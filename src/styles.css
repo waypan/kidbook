@@ -36,6 +36,41 @@ body {
   transform: scaleX(-1);
 }
 
+.apriltag-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.apriltag-mask {
+  fill: rgba(34, 197, 94, 0.48);
+  stroke: #00ff66;
+  stroke-width: 6;
+  vector-effect: non-scaling-stroke;
+}
+
+.apriltag-center {
+  fill: #00ff66;
+  stroke: #fff;
+  stroke-width: 3;
+  vector-effect: non-scaling-stroke;
+}
+
+.apriltag-label {
+  fill: #fff;
+  stroke: rgba(0, 0, 0, 0.78);
+  stroke-width: 6;
+  paint-order: stroke fill;
+  font-size: 18px;
+  font-weight: 800;
+  dominant-baseline: middle;
+}
+
 .camera-start-panel {
   position: absolute;
   left: 50%;

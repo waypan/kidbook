@@ -7,9 +7,7 @@ interface ComlinkApi {
   wrap<T>(endpoint: Worker): T;
 }
 
-interface AprilTagWorkerModule {
-  Apriltag: new (onReady: () => void) => Promise<AprilTagDetectorProxy>;
-}
+type AprilTagWorkerConstructor = new (onReady: () => void) => Promise<AprilTagDetectorProxy>;
 
 interface AprilTagDetectorProxy {
   detect(grayscale: Uint8ClampedArray, width: number, height: number): Promise<RawAprilTagDetection[]>;
@@ -21,10 +19,21 @@ interface AprilTagDetectorProxy {
 interface RawAprilTagDetection {
   id?: number;
   tag_id?: number;
-  center?: Point;
-  c?: Point;
-  corners?: Point[];
-  p?: Point[];
+  center?: unknown;
+  c?: unknown;
+  corners?: unknown[];
+  p?: unknown[];
+}
+
+export interface AprilTagDetection {
+  id: number;
+  center: Point;
+  corners: Point[];
+}
+
+export interface AprilTagPageMarkerResult {
+  pageCorners: PageCorners | null;
+  detections: AprilTagDetection[];
 }
 
 interface MarkerDefinition {
@@ -35,6 +44,7 @@ interface MarkerDefinition {
 const tagWorkerUrl = '/vendor/apriltag/apriltag.js';
 const comlinkUrl = '/vendor/apriltag/comlink.js';
 const scanWidth = 480;
+const detectorReadyTimeoutMs = 8000;
 const bookMarkers: MarkerDefinition[] = [
   { id: 0, key: 'topLeft' },
   { id: 1, key: 'topRight' },
@@ -54,22 +64,28 @@ declare global {
 export async function detectAprilTagPageMarkers(
   video: HTMLVideoElement,
   canvas: HTMLCanvasElement
-): Promise<PageCorners | null> {
-  if (!video.videoWidth || !video.videoHeight) return null;
+): Promise<AprilTagPageMarkerResult> {
+  if (!video.videoWidth || !video.videoHeight) {
+    return { pageCorners: null, detections: [] };
+  }
 
   const detector = await getDetector();
   const { grayscale, width, height, scaleX, scaleY } = videoFrameToGrayscale(video, canvas);
-  const detections = await detector.detect(grayscale, width, height);
+  const rawDetections = await detector.detect(grayscale, width, height);
+  const detections = rawDetections
+    .map((detection) => normalizeDetection(detection, scaleX, scaleY))
+    .filter((detection): detection is AprilTagDetection => detection !== null);
 
   const corners = {} as Partial<PageCorners>;
   for (const marker of bookMarkers) {
-    const detection = detections.find((candidate) => getDetectionId(candidate) === marker.id);
-    const center = detection ? getDetectionCenter(detection) : null;
-    if (!center) return null;
-    corners[marker.key] = [center[0] * scaleX, center[1] * scaleY];
+    const detection = detections.find((candidate) => candidate.id === marker.id);
+    if (!detection) {
+      return { pageCorners: null, detections };
+    }
+    corners[marker.key] = detection.center;
   }
 
-  return corners as PageCorners;
+  return { pageCorners: corners as PageCorners, detections };
 }
 
 async function getDetector(): Promise<AprilTagDetectorProxy> {
@@ -77,18 +93,18 @@ async function getDetector(): Promise<AprilTagDetectorProxy> {
     detectorPromise = (async () => {
       const Comlink = await loadComlink();
       const worker = new Worker(tagWorkerUrl);
-      const workerModule = Comlink.wrap<AprilTagWorkerModule>(worker);
+      const RemoteApriltag = Comlink.wrap<AprilTagWorkerConstructor>(worker);
       let resolveReady: () => void = () => undefined;
       const readyPromise = new Promise<void>((resolve) => {
         resolveReady = resolve;
       });
-      const detector = await new workerModule.Apriltag(
+      const detector = await new RemoteApriltag(
         Comlink.proxy(() => {
           resolveReady();
         })
       );
 
-      await readyPromise;
+      await withTimeout(readyPromise, detectorReadyTimeoutMs, 'AprilTag detector did not finish loading');
       await detector.set_return_pose(0);
       await detector.set_return_solutions(0);
       await detector.set_max_detections(bookMarkers.length);
@@ -97,6 +113,21 @@ async function getDetector(): Promise<AprilTagDetectorProxy> {
   }
 
   return detectorPromise;
+}
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timeout = window.setTimeout(() => reject(new Error(message)), timeoutMs);
+    promise
+      .then((value) => {
+        window.clearTimeout(timeout);
+        resolve(value);
+      })
+      .catch((error) => {
+        window.clearTimeout(timeout);
+        reject(error);
+      });
+  });
 }
 
 function loadComlink(): Promise<ComlinkApi> {
@@ -162,23 +193,65 @@ function getDetectionId(detection: RawAprilTagDetection): number | null {
   return null;
 }
 
+function normalizeDetection(
+  detection: RawAprilTagDetection,
+  scaleX: number,
+  scaleY: number
+): AprilTagDetection | null {
+  const id = getDetectionId(detection);
+  const center = getDetectionCenter(detection);
+  const rawCorners = detection.corners ?? detection.p ?? [];
+  if (id === null || !center) return null;
+
+  return {
+    id,
+    center: scalePoint(center, scaleX, scaleY),
+    corners: rawCorners
+      .map(pointFromUnknown)
+      .filter((point): point is Point => point !== null)
+      .map((point) => scalePoint(point, scaleX, scaleY))
+  };
+}
+
 function getDetectionCenter(detection: RawAprilTagDetection): Point | null {
-  if (isPoint(detection.center)) return detection.center;
-  if (isPoint(detection.c)) return detection.c;
+  const center = pointFromUnknown(detection.center);
+  if (center) return center;
+
+  const shortCenter = pointFromUnknown(detection.c);
+  if (shortCenter) return shortCenter;
 
   const corners = detection.corners ?? detection.p;
   if (!corners || corners.length === 0) return null;
+  const points = corners
+    .map(pointFromUnknown)
+    .filter((point): point is Point => point !== null);
+  if (points.length === 0) return null;
 
-  const sum = corners.reduce<Point>(
+  const sum = points.reduce<Point>(
     (total, corner) => [total[0] + corner[0], total[1] + corner[1]],
     [0, 0]
   );
-  return [sum[0] / corners.length, sum[1] / corners.length];
+  return [sum[0] / points.length, sum[1] / points.length];
 }
 
-function isPoint(value: unknown): value is Point {
-  return Array.isArray(value)
+function scalePoint(point: Point, scaleX: number, scaleY: number): Point {
+  return [point[0] * scaleX, point[1] * scaleY];
+}
+
+function pointFromUnknown(value: unknown): Point | null {
+  if (Array.isArray(value)
     && value.length >= 2
     && typeof value[0] === 'number'
-    && typeof value[1] === 'number';
+    && typeof value[1] === 'number') {
+    return [value[0], value[1]];
+  }
+
+  if (value && typeof value === 'object' && 'x' in value && 'y' in value) {
+    const point = value as { x: unknown; y: unknown };
+    if (typeof point.x === 'number' && typeof point.y === 'number') {
+      return [point.x, point.y];
+    }
+  }
+
+  return null;
 }
