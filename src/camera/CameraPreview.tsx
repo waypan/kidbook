@@ -41,10 +41,12 @@ const CameraPreview: React.FC<CameraPreviewProps> = ({
   const frameCountRef = useRef(0);
   const [currentPage, setCurrentPage] = useState<BookPage | null>(null);
   const [book, setBook] = useState<Book | null>(null);
+  const [currentHitObject, setCurrentHitObject] = useState<BookObject | null>(null);
   const [lastHitObject, setLastHitObject] = useState<BookObject | null>(null);
   const [handAvailable, setHandAvailable] = useState(false);
   const [handError, setHandError] = useState<string | null>(null);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
+  const [fingerCameraPoint, setFingerCameraPoint] = useState<[number, number] | null>(null);
   const [pagePoint, setPagePoint] = useState<[number, number] | null>(null);
   const [pageTrackingReady, setPageTrackingReady] = useState(false);
   const [pageTrackingError, setPageTrackingError] = useState<string | null>(null);
@@ -73,7 +75,9 @@ const CameraPreview: React.FC<CameraPreviewProps> = ({
     const pageData = await loadPage(book.pages[index].data);
     setCurrentPage(pageData);
     setCurrentPageIndex(index);
+    setFingerCameraPoint(null);
     setPagePoint(null);
+    setCurrentHitObject(null);
     setLastHitObject(null);
     pageHomographyRef.current = null;
     setPageTrackingReady(false);
@@ -146,9 +150,10 @@ const CameraPreview: React.FC<CameraPreviewProps> = ({
 
           if (fingerPoint) {
             const cameraPoint: Point = [
-              (1 - fingerPoint[0]) * video.videoWidth,
+              fingerPoint[0] * video.videoWidth,
               fingerPoint[1] * video.videoHeight
             ];
+            setFingerCameraPoint(cameraPoint);
             const mappedPagePoint = pageHomographyRef.current
               ? transformPoint(cameraPoint, pageHomographyRef.current)
               : null;
@@ -157,6 +162,7 @@ const CameraPreview: React.FC<CameraPreviewProps> = ({
             onPagePoint(mappedPagePoint);
 
             const hitObject = mappedPagePoint ? findHitObject(currentPage, mappedPagePoint) : null;
+            setCurrentHitObject(hitObject);
             onHitObject(hitObject);
 
             if (hitObject && hitObject !== lastHitObject && shouldPlay(hitObject.id)) {
@@ -168,7 +174,9 @@ const CameraPreview: React.FC<CameraPreviewProps> = ({
           onFingerPoint(null);
           onPagePoint(null);
           onHitObject(null);
+          setCurrentHitObject(null);
           setLastHitObject(null);
+          setFingerCameraPoint(null);
           setPagePoint(null);
           if (pointerRef.current) {
             pointerRef.current.style.display = 'none';
@@ -195,10 +203,10 @@ const CameraPreview: React.FC<CameraPreviewProps> = ({
       </div>
       <DebugOverlay
         currentPage={currentPage}
-        hitObject={lastHitObject}
-        fingerPoint={null}
+        hitObject={currentHitObject}
+        fingerPoint={fingerCameraPoint}
         pagePoint={pagePoint}
-        isDetecting={handAvailable}
+        isDetecting={handAvailable && !!fingerCameraPoint}
       />
       <div className={`page-tracking-status ${pageTrackingReady ? 'is-ready' : ''}`}>
         {pageTrackingError ?? getPageTrackingStatus(pageTrackingReady, detectedTagIds)}
